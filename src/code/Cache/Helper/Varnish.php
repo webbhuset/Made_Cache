@@ -133,13 +133,7 @@ class Made_Cache_Helper_Varnish extends Mage_Core_Helper_Abstract
      */
     public function ban($urls)
     {
-        $urls = (array)$urls;
-        $status = array();
-        foreach ($urls as $url) {
-            $header = 'X-Ban-String: req.url ~ ' . $url;
-            $status = array_merge($this->_callVarnish('/', 'BAN', array($header)), $status);
-        }
-        return $status;
+        return $this->_callVarnish($urls, 'BAN');
     }
 
     /**
@@ -185,6 +179,12 @@ class Made_Cache_Helper_Varnish extends Mage_Core_Helper_Abstract
 
         foreach ($servers as $varnishServer) {
             foreach ($urls as $url) {
+                // If this is ban, use headers
+                if ($type == 'BAN') {
+                        $headers = array( 'X-Ban-String: req.url ~ ' . $url);
+                        $url = '/';
+                }
+
                 $varnishUrl = "http://" . $varnishServer . $url;
 
                 $ch = curl_init();
