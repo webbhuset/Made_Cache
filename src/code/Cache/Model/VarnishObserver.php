@@ -230,6 +230,9 @@ class Made_Cache_Model_VarnishObserver
 
         $errors = Mage::helper('cache/varnish')->ban($allUrls);
 
+        // Keep tag list that varnish needs to ban up-to-date by clearing the tags from backend cache
+        Mage::helper('cache/varnish')->clearTags($tags);
+
         // Varnish purge messages should only appear in the backend
         if (Mage::app()->getStore()->isAdmin()) {
             if (!empty($errors)) {

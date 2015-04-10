@@ -94,6 +94,17 @@ class Made_Cache_Helper_Varnish extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Remove cache tags from backend cache
+     */
+    public function clearTags($tags)
+    {
+        $cache = Mage::app()->getCache();
+        foreach ($tags as $cacheTag) {
+            $cache->remove(self::URL_CACHE_KEY_PREFIX . '_' . $cacheTag);
+        }
+    }
+
+    /**
      * Returns an array of defined Varnish servers
      *
      * @return array
